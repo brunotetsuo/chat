@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat com GPT</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+  <div class="bg-white w-full max-w-xl rounded-xl shadow-lg p-6 flex flex-col space-y-4">
+    <h1 class="text-2xl font-bold text-gray-800">🤖 Fale com o Cebolinha bot</h1>
+
+    <div id="chat" class="flex-1 overflow-y-auto space-y-2 max-h-[400px] pr-2"></div>
+
+    <div class="flex space-x-2">
+      <input
+        id="msg"
+        type="text"
+        class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+        placeholder="Digite sua mensagem..."
+      />
+      <button
+        onclick="send()"
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+      >
+        Enviar
+      </button>
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById("msg");
+    const chat = document.getElementById("chat");
+  
+    async function send() {
+      const message = input.value.trim();
+      if (!message) return;
+  
+      chat.innerHTML += `<div class="text-right"><span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-lg inline-block">${message}</span></div>`;
+      input.value = "";
+  
+      const res = await fetch("https://f2bd-2804-4eac-1457-fe01-a9ec-122b-34a9-8841.ngrok-free.app/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
+  
+      const reply = await res.text();
+      chat.innerHTML += `<div class="text-left"><span class="bg-gray-200 text-gray-800 px-3 py-1 rounded-lg inline-block">${reply}</span></div>`;
+      chat.scrollTop = chat.scrollHeight;
+    }
+  
+    input.addEventListener("keydown", function (e) {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        send();
+      }
+    });
+  </script>
+  
+</body>
+</html>
