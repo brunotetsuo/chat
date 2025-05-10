@@ -28,34 +28,41 @@
   </div>
 
   <script>
-    const input = document.getElementById("msg");
-    const chat = document.getElementById("chat");
-  
-    async function send() {
-      const message = input.value.trim();
-      if (!message) return;
-  
-      chat.innerHTML += `<div class="text-right"><span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-lg inline-block">${message}</span></div>`;
-      input.value = "";
-  
-      const res = await fetch("https://f05e-2804-4eac-1457-fe01-c5ce-d065-a1f0-f6ae.ngrok-free.app/api/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message })
-      });
-  
-      const reply = await res.text();
-      chat.innerHTML += `<div class="text-left"><span class="bg-gray-200 text-gray-800 px-3 py-1 rounded-lg inline-block">${reply}</span></div>`;
-      chat.scrollTop = chat.scrollHeight;
-    }
-  
-    input.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        send();
-      }
+  const input = document.getElementById("msg");
+  const chat = document.getElementById("chat");
+
+  // Gera um sessionId único por sessão (salvo em localStorage)
+  let sessionId = localStorage.getItem("sessionId");
+  if (!sessionId) {
+    sessionId = crypto.randomUUID(); // Gera um UUID único
+    localStorage.setItem("sessionId", sessionId);
+  }
+
+  async function send() {
+    const message = input.value.trim();
+    if (!message) return;
+
+    chat.innerHTML += `<div class="text-right"><span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-lg inline-block">${message}</span></div>`;
+    input.value = "";
+
+    const res = await fetch("https://b17d-2804-4eac-1457-fe01-78c8-d4fb-b552-ef48.ngrok-free.app/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message, sessionId }) // Inclui sessionId aqui
     });
-  </script>
+
+    const reply = await res.text();
+    chat.innerHTML += `<div class="text-left"><span class="bg-gray-200 text-gray-800 px-3 py-1 rounded-lg inline-block">${reply}</span></div>`;
+    chat.scrollTop = chat.scrollHeight;
+  }
+
+  input.addEventListener("keydown", function (e) {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      send();
+    }
+  });
+</script>
   
 </body>
 </html>
