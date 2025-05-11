@@ -45,7 +45,7 @@
     chat.innerHTML += `<div class="text-right"><span class="bg-blue-100 text-blue-800 px-3 py-1 rounded-lg inline-block">${message}</span></div>`;
     input.value = "";
 
-    const res = await fetch("https://b17d-2804-4eac-1457-fe01-78c8-d4fb-b552-ef48.ngrok-free.app/api/chat", {
+    const res = await fetch("https://76ef-2804-4eac-1457-fe01-4951-9d9b-281b-b7cf.ngrok-free.app/api/chat", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ message, sessionId }) // Inclui sessionId aqui
